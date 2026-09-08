@@ -1,0 +1,993 @@
+# E-Commerce REST API
+
+## Product Requirements Document (PRD)
+
+**Version:** 1.0
+**Status:** Planning
+**Backend:** Laravel
+**Database:** MySQL
+**API Style:** RESTful API
+**Authentication:** Token-based Authentication
+**Primary Goal:** Build a production-style E-Commerce Backend suitable for a professional Laravel Backend Developer portfolio.
+
+---
+
+# 1. Product Overview
+
+## 1.1 Project Idea
+
+The project is a complete E-Commerce backend that provides RESTful APIs for managing an online store.
+
+The system will support customers who want to browse products, manage their carts, place orders, and track them.
+
+It will also provide administrative functionality for managing products, inventory, customers, orders, discounts, and other store operations.
+
+The project will be built as a **backend-first REST API**, without depending on a web frontend.
+
+---
+
+# 2. Problem Statement
+
+Small and medium-sized online stores need a backend system that can:
+
+* Manage products and categories.
+* Track inventory.
+* Allow customers to create carts and orders.
+* Manage customer accounts and addresses.
+* Handle discounts and coupons.
+* Process the order lifecycle.
+* Provide administrative controls.
+* Notify users about important events.
+* Maintain reliable and secure business logic.
+
+The goal is to design and implement these requirements using Laravel in a way that resembles a real-world production application.
+
+---
+
+# 3. Project Goals
+
+The project should demonstrate the ability to:
+
+1. Build a RESTful API with Laravel.
+2. Design a normalized relational database.
+3. Implement authentication and authorization.
+4. Model complex Eloquent relationships.
+5. Implement real business logic beyond CRUD.
+6. Use Laravel services, requests, resources, policies, events, listeners, jobs, queues, notifications, caching, and scheduled tasks where appropriate.
+7. Handle transactions and data consistency.
+8. Write automated tests.
+9. Apply secure backend development practices.
+10. Document and structure the project professionally.
+
+---
+
+# 4. Target Users
+
+The system has three primary user types.
+
+## 4.1 Customer
+
+A normal store user who can:
+
+* Register and log in.
+* Browse products.
+* Search and filter products.
+* Manage their profile.
+* Manage addresses.
+* Add products to a cart.
+* Manage wishlist items.
+* Create orders.
+* Apply coupons.
+* View order history.
+* Track order status.
+* Leave reviews and ratings.
+
+---
+
+## 4.2 Admin
+
+The administrator manages the entire store.
+
+Admin capabilities include:
+
+* Manage users.
+* Manage products.
+* Manage categories.
+* Manage brands.
+* Manage product variants.
+* Manage inventory.
+* Manage coupons.
+* Manage orders.
+* Manage reviews.
+* View reports and statistics.
+
+---
+
+## 4.3 System
+
+Some operations should be performed automatically by the application.
+
+Examples:
+
+* Sending notifications.
+* Processing queued jobs.
+* Detecting low-stock products.
+* Expiring coupons.
+* Escalating or handling failed operations.
+* Cleaning temporary data.
+* Recording important system events.
+
+---
+
+# 5. Core Features
+
+## 5.1 Authentication
+
+The API must support:
+
+* User registration.
+* Login.
+* Logout.
+* Current authenticated user.
+* Password hashing.
+* Password reset.
+* Email verification.
+* Token-based authentication.
+
+Authentication must be separated from authorization.
+
+---
+
+# 5.2 User Management
+
+Customers should be able to:
+
+* View their profile.
+* Update profile information.
+* Change password.
+* Manage addresses.
+
+Admins should be able to:
+
+* View users.
+* Search users.
+* Filter users.
+* Activate/deactivate accounts where appropriate.
+
+---
+
+# 5.3 Product Catalog
+
+The system must support:
+
+### Products
+
+Each product may contain:
+
+* Name
+* Slug
+* Description
+* Short description
+* SKU
+* Price
+* Discount price
+* Status
+* Category
+* Brand
+* Images
+* Stock information
+
+### Categories
+
+Products can belong to categories.
+
+Categories should support hierarchical organization where appropriate.
+
+Example:
+
+```text
+Electronics
+├── Phones
+├── Laptops
+└── Accessories
+```
+
+### Brands
+
+Products may belong to brands.
+
+### Product Variants
+
+Products may have variants such as:
+
+```text
+T-Shirt
+├── Size: S
+├── Size: M
+├── Size: L
+└── Size: XL
+```
+
+or:
+
+```text
+Laptop
+├── RAM: 8GB
+├── RAM: 16GB
+└── RAM: 32GB
+```
+
+---
+
+# 5.4 Product Images
+
+The API must support product image management.
+
+Requirements include:
+
+* Upload image.
+* Delete image.
+* Associate images with products.
+* Define a primary image.
+* Validate uploaded files.
+* Prevent unsafe file uploads.
+
+---
+
+# 5.5 Product Listing
+
+Customers should be able to:
+
+* Retrieve products.
+* Retrieve a single product.
+* Search by keyword.
+* Filter by category.
+* Filter by brand.
+* Filter by price range.
+* Sort products.
+* Paginate results.
+
+Example:
+
+```text
+GET /api/products
+GET /api/products/{product}
+```
+
+---
+
+# 5.6 Inventory Management
+
+The system must track product stock.
+
+Requirements:
+
+* Add stock.
+* Remove stock.
+* View current stock.
+* Detect insufficient stock.
+* Prevent ordering unavailable quantities.
+* Track stock changes.
+* Identify low-stock products.
+
+Inventory updates must maintain database consistency.
+
+---
+
+# 5.7 Cart
+
+Customers can:
+
+* Create/use a cart.
+* Add products.
+* Update quantities.
+* Remove products.
+* View cart.
+* Clear cart.
+
+Business rules include:
+
+* Quantity must be valid.
+* Product must be available.
+* Requested quantity must not exceed available stock.
+* Cart totals must be calculated reliably.
+
+---
+
+# 5.8 Wishlist
+
+Customers can:
+
+* Add a product to wishlist.
+* Remove a product.
+* View wishlist.
+
+A customer should not have duplicate wishlist entries for the same product.
+
+---
+
+# 5.9 Addresses
+
+Customers can manage shipping addresses.
+
+An address may contain:
+
+* Full name
+* Phone
+* Country
+* City
+* Area
+* Street
+* Building
+* Postal code
+* Additional information
+
+A customer can have multiple addresses and designate one as the default address.
+
+---
+
+# 5.10 Coupons and Discounts
+
+The system should support coupons.
+
+A coupon may contain:
+
+* Code
+* Type
+* Value
+* Minimum order amount
+* Maximum discount
+* Usage limit
+* Per-user usage limit
+* Start date
+* Expiration date
+* Active status
+
+Coupon types may include:
+
+```text
+Percentage
+Fixed Amount
+```
+
+The system must validate coupon eligibility before applying a discount.
+
+---
+
+# 5.11 Orders
+
+Customers can create orders from their cart.
+
+An order should contain:
+
+* Order number
+* Customer
+* Shipping address snapshot
+* Items
+* Quantities
+* Prices
+* Discounts
+* Shipping cost
+* Total
+* Payment status
+* Order status
+* Timestamps
+
+Example lifecycle:
+
+```text
+Pending
+   ↓
+Confirmed
+   ↓
+Processing
+   ↓
+Shipped
+   ↓
+Delivered
+```
+
+Possible alternative outcomes:
+
+```text
+Pending → Cancelled
+Confirmed → Cancelled
+Processing → Cancelled
+```
+
+The exact allowed transitions must be enforced by business rules.
+
+---
+
+# 5.12 Order Items
+
+Each order contains one or more order items.
+
+Each item should preserve the price at the time the order was created.
+
+This is important because product prices may change later.
+
+Example:
+
+```text
+Product current price: $150
+
+Order created:
+Order Item price: $130
+```
+
+The historical order must continue showing `$130`.
+
+---
+
+# 5.13 Payments
+
+The first version will implement a **payment simulation layer** rather than connecting to a real payment provider.
+
+The system should support:
+
+* Payment creation.
+* Payment status.
+* Payment reference.
+* Successful payment simulation.
+* Failed payment simulation.
+* Refund simulation where appropriate.
+
+The architecture should allow a real payment gateway to be integrated later.
+
+---
+
+# 5.14 Reviews and Ratings
+
+Customers who purchased a product may submit:
+
+* Rating
+* Review title
+* Review body
+
+Business rules:
+
+* Rating must be within the allowed range.
+* A customer should only review according to the defined purchase policy.
+* Duplicate reviews should be controlled.
+* Reviews can be moderated by admins.
+
+---
+
+# 5.15 Notifications
+
+The system should notify users about important events.
+
+Examples:
+
+* Account verification.
+* Password reset.
+* Order created.
+* Order confirmed.
+* Order shipped.
+* Order delivered.
+* Payment failure.
+
+Notifications may be handled asynchronously using queues.
+
+---
+
+# 5.16 Search, Filtering, Sorting and Pagination
+
+Product endpoints must support:
+
+### Search
+
+```text
+?search=laptop
+```
+
+### Filtering
+
+```text
+?category=phones
+?brand=apple
+?min_price=500
+?max_price=1500
+```
+
+### Sorting
+
+```text
+?sort=price
+?sort=-price
+```
+
+### Pagination
+
+```text
+?page=2&per_page=20
+```
+
+The API should return pagination metadata.
+
+---
+
+# 5.17 Admin Dashboard API
+
+The backend should provide administrative statistics such as:
+
+* Total users.
+* Total products.
+* Total orders.
+* Total revenue.
+* Pending orders.
+* Low-stock products.
+* Top-selling products.
+
+These will be exposed through API endpoints rather than a frontend dashboard.
+
+---
+
+# 6. Authorization
+
+The application must distinguish between authentication and authorization.
+
+Examples:
+
+```text
+Customer
+    ↓
+Can view own orders
+
+Admin
+    ↓
+Can view/manage all orders
+```
+
+Customers must not be able to modify another customer's resources.
+
+Authorization should use Laravel's appropriate mechanisms such as:
+
+* Policies
+* Gates
+* Middleware
+* Role/permission checks
+
+---
+
+# 7. Business Rules
+
+Important business rules include:
+
+### Product
+
+* SKU must be unique.
+* Product price cannot be invalid.
+* Product must be active to be purchasable.
+* Product must have sufficient stock.
+
+### Cart
+
+* Quantity must be greater than zero.
+* Duplicate cart items should be handled correctly.
+* Out-of-stock products cannot be purchased.
+
+### Orders
+
+* Empty carts cannot create orders.
+* Stock must be checked before order creation.
+* Order creation must be atomic.
+* Order items must preserve their historical prices.
+* Inventory must be updated consistently.
+
+### Coupons
+
+* Expired coupons cannot be used.
+* Inactive coupons cannot be used.
+* Usage limits must be enforced.
+* Minimum order requirements must be enforced.
+
+### Reviews
+
+* Review rules must be enforced at the API/business-logic level.
+* Users must not be allowed to manipulate another user's review.
+
+---
+
+# 8. Transactions and Data Consistency
+
+Operations involving multiple related database changes should use database transactions where necessary.
+
+Example:
+
+```text
+Create Order
+    ↓
+Create Order Items
+    ↓
+Decrease Inventory
+    ↓
+Apply Coupon Usage
+    ↓
+Clear Cart
+    ↓
+Commit
+```
+
+If an important operation fails:
+
+```text
+Rollback
+```
+
+The system must avoid partially completed orders.
+
+---
+
+# 9. Performance Requirements
+
+The API should consider:
+
+* Database indexing.
+* Eager loading.
+* Avoiding N+1 queries.
+* Pagination.
+* Query optimization.
+* Caching frequently accessed data.
+* Queueing expensive operations.
+* Proper API response structure.
+
+Performance decisions should be based on actual application needs rather than blindly applying patterns.
+
+---
+
+# 10. Security Requirements
+
+The API must follow secure backend practices.
+
+Areas include:
+
+* Authentication.
+* Authorization.
+* Request validation.
+* SQL injection prevention.
+* Mass assignment protection.
+* Secure file upload validation.
+* Rate limiting.
+* Sensitive data protection.
+* Secure password handling.
+* Proper error responses.
+* Preventing unauthorized resource access.
+* Avoiding unnecessary information disclosure.
+* Secure handling of API tokens.
+
+Security controls should be implemented as part of the application design, not added only at the end.
+
+---
+
+# 11. API Design Requirements
+
+The API should follow RESTful conventions.
+
+Example:
+
+```text
+GET    /api/products
+GET    /api/products/{id}
+
+POST   /api/products
+
+PUT    /api/products/{id}
+PATCH  /api/products/{id}
+
+DELETE /api/products/{id}
+```
+
+Endpoints should:
+
+* Use appropriate HTTP methods.
+* Return appropriate HTTP status codes.
+* Validate input.
+* Return consistent JSON responses.
+* Return meaningful error messages.
+* Use API Resources where appropriate.
+* Support pagination for collection endpoints.
+
+---
+
+# 12. Error Handling
+
+The API should return consistent error responses.
+
+Example:
+
+```json
+{
+    "success": false,
+    "message": "The requested product is unavailable.",
+    "errors": {}
+}
+```
+
+Validation errors should provide structured information.
+
+The application should avoid exposing internal implementation details in production error responses.
+
+---
+
+# 13. Testing Requirements
+
+The project should include automated tests.
+
+Testing areas include:
+
+### Authentication
+
+* Registration.
+* Login.
+* Logout.
+* Unauthorized access.
+
+### Products
+
+* Product creation.
+* Product retrieval.
+* Product update.
+* Product deletion.
+* Validation.
+
+### Cart
+
+* Adding products.
+* Updating quantities.
+* Removing products.
+* Stock validation.
+
+### Orders
+
+* Successful order creation.
+* Insufficient stock.
+* Coupon validation.
+* Transaction rollback.
+* Order authorization.
+
+### Authorization
+
+* Customer accessing own resources.
+* Customer attempting unauthorized access.
+* Admin permissions.
+
+The goal is to test meaningful business behavior, not simply maximize code coverage.
+
+---
+
+# 14. Documentation Requirements
+
+The GitHub repository must include professional documentation.
+
+The README should include:
+
+* Project overview.
+* Problem statement.
+* Main features.
+* Technologies.
+* Architecture.
+* Database ERD.
+* API documentation.
+* Authentication.
+* Installation instructions.
+* Environment setup.
+* Running tests.
+* Example API requests.
+* Example API responses.
+* Project structure.
+* Security considerations.
+* What was learned.
+* Future improvements.
+
+Additional API documentation will be provided through OpenAPI/Swagger and/or a Postman collection.
+
+---
+
+# 15. Git Requirements
+
+Git history is part of the portfolio.
+
+Commits should be:
+
+* Small enough to represent a logical change.
+* Descriptive.
+* Related to one purpose.
+* Written consistently.
+
+Examples:
+
+```text
+feat: create product migration and model
+feat: add product CRUD endpoints
+feat: implement product request validation
+feat: add product API resource
+test: add product API feature tests
+fix: prevent duplicate wishlist items
+refactor: extract order creation logic
+docs: document product endpoints
+```
+
+Avoid meaningless commits such as:
+
+```text
+update
+fix
+test
+final
+final2
+done
+```
+
+---
+
+# 16. Project Structure Requirements
+
+The application should use Laravel's conventions as the foundation.
+
+Additional application layers should only be introduced when they solve a real problem.
+
+Potential structure:
+
+```text
+app/
+├── Actions/
+├── Http/
+│   ├── Controllers/
+│   ├── Requests/
+│   └── Resources/
+├── Models/
+├── Policies/
+├── Services/
+├── Repositories/
+├── Events/
+├── Listeners/
+├── Jobs/
+├── Notifications/
+└── ...
+```
+
+The final structure will be determined during implementation based on actual project complexity.
+
+---
+
+# 17. Non-Functional Requirements
+
+The application should be:
+
+### Maintainable
+
+Code should be readable and logically organized.
+
+### Scalable
+
+The architecture should allow adding features later without major rewrites.
+
+### Testable
+
+Business logic should be easy to test.
+
+### Secure
+
+Common API security risks should be addressed.
+
+### Documented
+
+Developers should be able to understand and run the project.
+
+### Deployable
+
+The project should be structured so it can later be deployed to a real environment.
+
+---
+
+# 18. Future Extensions
+
+These features are outside the initial scope but should be possible to add later:
+
+* Real payment gateway.
+* Multiple currencies.
+* Multi-language support.
+* Shipping provider integration.
+* Advanced search engine.
+* Product recommendations.
+* Sales analytics.
+* Vendor/seller marketplace.
+* Microservice extraction for specific components.
+* Vue frontend.
+* Mobile application.
+
+The backend should avoid unnecessary complexity merely to support hypothetical future requirements.
+
+---
+
+# 19. Portfolio Deliverables
+
+At project completion, the repository should contain:
+
+```text
+Laravel E-Commerce API
+│
+├── Source Code
+├── Database Migrations
+├── Seeders / Factories
+├── Automated Tests
+├── API Documentation
+├── Postman Collection
+├── OpenAPI Documentation
+├── ERD
+├── README.md
+├── .env.example
+└── Meaningful Git History
+```
+
+The final GitHub repository should clearly communicate that this is a **production-style Laravel backend project**, not a simple CRUD tutorial.
+
+---
+
+# 20. Project Success Criteria
+
+The project will be considered successful when:
+
+1. A user can register and authenticate.
+2. Customers can browse and search the catalog.
+3. Customers can manage carts and wishlists.
+4. Customers can manage addresses.
+5. Customers can create valid orders.
+6. Inventory is updated consistently.
+7. Coupons are validated correctly.
+8. Order states follow defined business rules.
+9. Admins can manage store resources.
+10. Unauthorized actions are blocked.
+11. Important operations are tested.
+12. API responses are consistent.
+13. Documentation is complete.
+14. The repository is clean and professional.
+15. The project can be understood and run by another developer.
+
+---
+
+# 21. Development Philosophy
+
+This project will not be implemented as one large coding session.
+
+Development will follow incremental stages:
+
+```text
+PRD
+ ↓
+Database Design
+ ↓
+ERD
+ ↓
+API Design
+ ↓
+Project Architecture
+ ↓
+Authentication
+ ↓
+Catalog
+ ↓
+Cart & Wishlist
+ ↓
+Orders & Inventory
+ ↓
+Coupons & Payments
+ ↓
+Reviews & Notifications
+ ↓
+Caching / Queues / Events
+ ↓
+Testing
+ ↓
+Security Review
+ ↓
+Documentation
+ ↓
+GitHub Finalization
+ ↓
+LinkedIn Project Post
+```
+
+Each stage should produce a meaningful piece of the final application and a clean Git commit history.
