@@ -10,6 +10,8 @@ php artisan make:controller Api/AuthController
 php artisan make:request Auth/RegisterRequest
 php artisan make:resource UserResource
 php artisan make:enum Enums/Auth/UserRole
+php artisan make:test Auth/AuthenticationTest
+php artisan test
 
 php artisan route:clear
 php artisan config:clear
