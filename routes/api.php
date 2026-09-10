@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
@@ -22,13 +23,22 @@ Route::prefix('v1')->group(function () {
     //profile
 Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update']);
-
-    Route::put('/profile/password', [
-        ProfileController::class,
-        'changePassword'
-    ]);
+    Route::put('/profile/password', [ProfileController::class, 'changePassword']);
 });
 
+
+//addresses
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('addresses', AddressController::class)
+        ->only([
+            'index',
+            'store',
+            'show',
+            'update',
+            'destroy',
+        ]);
+
+});
 });
 
 
