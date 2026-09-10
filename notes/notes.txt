@@ -7,3 +7,5 @@ Implementation Plan
 php artisan install:api
 php artisan migrate:fresh
 php artisan make:controller Api/AuthController
+php artisan make:request Auth/RegisterRequest
+php artisan make:resource UserResource
