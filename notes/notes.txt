@@ -9,3 +9,4 @@ php artisan migrate:fresh
 php artisan make:controller Api/AuthController
 php artisan make:request Auth/RegisterRequest
 php artisan make:resource UserResource
+php artisan make:enum Enums/Auth/UserRole
