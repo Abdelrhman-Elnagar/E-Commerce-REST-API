@@ -17,3 +17,7 @@ php artisan make:model Address -m
 php artisan route:clear
 php artisan config:clear
 php artisan view:clear
+
+
+
+relationship betwen category and product
