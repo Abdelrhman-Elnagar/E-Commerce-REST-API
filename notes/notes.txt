@@ -4,6 +4,8 @@ API Design
 Architecture
 Implementation Plan
 
+business rules
+
 php artisan install:api
 php artisan migrate:fresh
 php artisan make:controller Api/AuthController
