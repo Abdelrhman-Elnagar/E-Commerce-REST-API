@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Inventory\UpdateInventoryRequest;
 use App\Http\Resources\InventoryResource;
 use App\Models\ProductVariant;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InventoryController

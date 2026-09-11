@@ -4,3 +4,4 @@ auth token must change
 protect ddos attack in paginnation product
 role and permission (especially in active status prodect for admin and user) -> so the solve is middleware or request?  (https://gemini.google.com/app/b331f28e1baa9782)
 can normal user change discount price in prlduct attribute which is fillable in model
+where is the filepath stored?

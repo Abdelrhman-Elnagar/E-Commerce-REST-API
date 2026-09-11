@@ -6,9 +6,11 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductImageController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::prefix('v1')->group(function () {
     // aut
@@ -46,5 +48,11 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/variants/{variant}/inventory',[InventoryController::class, 'show']);
         Route::put('/variants/{variant}/inventory',[InventoryController::class, 'update']);
+
+        Route::get('/products/{product}/images',[ProductImageController::class, 'index']);
+
+        Route::post('/products/{product}/images',[ProductImageController::class, 'store']);
+        Route::put('/products/{product}/images/{image}',[ProductImageController::class, 'update']);
+        Route::delete('/products/{product}/images/{image}',[ProductImageController::class, 'destroy']);
     });
 });

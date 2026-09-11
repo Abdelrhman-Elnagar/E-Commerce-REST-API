@@ -15,6 +15,7 @@ php artisan make:enum Enums/Auth/UserRole
 php artisan make:test Auth/AuthenticationTest
 php artisan test
 php artisan make:model Address -m
+php artisan storage:link
 
 php artisan route:clear
 php artisan config:clear
