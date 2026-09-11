@@ -24,3 +24,4 @@ php artisan view:clear
 
 relationship betwen category and product
 make status filter product for admin only
+is best make logic inventory in backend , i think the logic be in the frontend be best

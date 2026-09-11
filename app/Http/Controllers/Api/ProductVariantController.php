@@ -8,6 +8,7 @@ use App\Http\Resources\ProductVariantResource;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductVariantController
 {
@@ -28,9 +29,26 @@ class ProductVariantController
         StoreProductVariantRequest $request,
         Product $product
     ) {
-        $variant = $product->variants()->create(
-            $request->validated()
-        );
+        // $variant = $product->variants()->create(
+        //     $request->validated()
+        // );
+
+        $variant = DB::transaction(function () use (
+    $product,
+    $request
+) {
+    $variant = $product->variants()->create(
+        $request->validated()
+    );
+
+    $variant->inventory()->create([
+        'quantity' => 0,
+        'reserved_quantity' => 0,
+        'low_stock_threshold' => 5,
+    ]);
+
+    return $variant;
+});
 
         $variant->load('product');
 

@@ -28,8 +28,8 @@ class ProductVariant extends Model
         return $this->belongsTo(Product::class);
     }
 
-    // public function inventory(): HasOne
-    // {
-    //     return $this->hasOne(Inventory::class);
-    // }
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(Inventory::class);
+    }
 }

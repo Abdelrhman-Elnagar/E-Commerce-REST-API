@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\ProfileController;
@@ -42,5 +43,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('brands', BrandController::class);
         Route::apiResource('products', ProductController::class);
         Route::apiResource( 'products.variants', ProductVariantController::class);
+
+        Route::get('/variants/{variant}/inventory',[InventoryController::class, 'show']);
+        Route::put('/variants/{variant}/inventory',[InventoryController::class, 'update']);
     });
 });
