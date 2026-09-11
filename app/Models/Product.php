@@ -30,10 +30,10 @@ class Product extends Model
         return $this->belongsTo(Brand::class);
     }
 
-    // public function variants(): HasMany
-    // {
-    //     return $this->hasMany(ProductVariant::class);
-    // }
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 
     // public function images(): HasMany
     // {
