@@ -10,21 +10,52 @@ use Illuminate\Http\Request;
 
 class ProductController
 {
-     public function index(Request $request)
-    {
-        // $perPage = min($request->integer('per_page', 15), 100);
-        $products = Product::query()
-            ->with(['category', 'brand'])
-            ->latest()
-            ->paginate(
-                $request->integer('per_page', 15)
-            );
+public function index(Request $request)
+{
+    //filter products based on category_id, brand_id, status, and search query
+    $products = Product::query()
+        ->with(['category', 'brand'])
+        ->when(
+            $request->filled('category_id'),
+            fn ($query) => $query->where(
+                'category_id',
+                $request->integer('category_id')
+            )
+        )
+        ->when(
+            $request->filled('brand_id'),
+            fn ($query) => $query->where(
+                'brand_id',
+                $request->integer('brand_id')
+            )
+        )
+        ->when(
+            $request->filled('status'),
+            fn ($query) => $query->where(
+                'status',
+                $request->string('status')
+            )
+        )
+        ->when(
+            $request->filled('search'),
+            fn ($query) => $query->where(function ($query) use ($request) {
+                $search = $request->string('search');
 
-        return response()->json([
-            'success' => true,
-            'data' => ProductResource::collection($products),
-        ]);
-    }
+                $query
+                    ->where('name', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%");
+            })
+        )
+        ->latest()
+        ->paginate(
+            $request->integer('per_page', 15)
+        );
+
+    return response()->json([
+        'success' => true,
+        'data' => ProductResource::collection($products),
+    ]);
+}
 
     public function store(StoreProductRequest $request)
     {
